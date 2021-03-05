@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/ui/characters/widgets/character_list_item.dart';
+import 'package:rick_and_morty/ui/characters/characters_screen_bloc.dart';
 import 'package:rick_and_morty/ui/characters/widgets/characters_list_widget.dart';
 
 class CharactersScreen extends StatefulWidget {
-  CharactersScreen({Key key}) : super(key: key);
+  final CharactersScreenBloc bloc;
+
+  CharactersScreen({Key key, this.bloc}) : super(key: key);
 
   @override
   _CharactersScreenState createState() {
@@ -15,6 +17,9 @@ class _CharactersScreenState extends State<CharactersScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _loadData();
+    });
   }
 
   @override
@@ -24,6 +29,29 @@ class _CharactersScreenState extends State<CharactersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CharactersListWidget();
+    return RefreshIndicator(
+      onRefresh: () async => await _loadData(),
+      child: StreamBuilder(
+          stream: widget.bloc.listCharacters,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              print(snapshot.data);
+              return CharactersListWidget(listCharacters: snapshot.data);
+            }
+            if (snapshot.hasError) {
+              return Text("Erreur");
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
+    );
   }
+
+  //region functions
+  _loadData() async {
+    /**
+     * Astuce pour faire de l'async dans le initState
+     */
+    await widget.bloc.fetchCharacters();
+  }
+//endregion
 }

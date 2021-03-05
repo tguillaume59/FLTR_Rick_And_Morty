@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rick_and_morty/services/characters/character_repository.dart';
 import 'package:rick_and_morty/services/characters/character_services.dart';
+import 'package:rick_and_morty/ui/characters/characters_screen_bloc.dart';
 
 setupDependenciesInjection() {
 
@@ -10,4 +11,7 @@ setupDependenciesInjection() {
 
   // Repositories
   GetIt.I.registerSingleton<CharacterRepository>(CharacterRepository(GetIt.I.get<CharacterApiServices>()));
+
+  // Blocs
+  GetIt.I.registerSingleton<CharactersScreenBloc>(CharactersScreenBloc(GetIt.I.get<CharacterRepository>()));
 }
