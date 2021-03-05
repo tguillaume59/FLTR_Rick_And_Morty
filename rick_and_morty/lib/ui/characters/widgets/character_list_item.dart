@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rick_and_morty/model/characters/character.dart';
+import 'package:rick_and_morty/ui/profile/profile_screen.dart';
+import 'package:rick_and_morty/ui/profile/profile_screen_bloc.dart';
 import 'package:rick_and_morty/utils/color/colors.dart';
 import 'package:rick_and_morty/utils/color/hex_color.dart';
 
@@ -11,9 +14,8 @@ class CharacterListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 300,
+    return InkWell(
+      onTap: () => onTap(context, character.id),
       child: Card(
           elevation: 5,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -84,5 +86,15 @@ class CharacterListItem extends StatelessWidget {
             ],
           )),
     );
+  }
+
+  onTap(BuildContext context, int id) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+                  profileScreenBloc: GetIt.I.get<ProfileScreenBloc>(),
+                  id: id,
+                )));
   }
 }

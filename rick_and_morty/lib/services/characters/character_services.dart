@@ -37,5 +37,11 @@ class CharacterApiServices {
     List<Character> charactersList = characterData.map((f) => Character.fromJson(f)).toList();
     return charactersList;
   }
+
+  Future<Character> getCharactersById(int id) async {
+    var data = await _getData("/character/$id");
+    Character character = Character.fromJson(data);
+    return character;
+  }
 }
 

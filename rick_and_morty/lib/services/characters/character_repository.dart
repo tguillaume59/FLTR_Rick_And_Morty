@@ -9,4 +9,6 @@ class CharacterRepository{
 
   Future<List<Character>> getListCharacters() async => await client.getCharactersList();
 
+  Future<Character> getCharacterById(int id) async => await client.getCharactersById(id);
+
 }
