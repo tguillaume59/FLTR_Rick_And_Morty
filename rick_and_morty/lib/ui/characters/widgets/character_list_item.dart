@@ -49,7 +49,7 @@ class CharacterListItem extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: HexColor(TEXT_COLOR),
+                                          color: HexColor(TEXT_COLOR_BLACK),
                                           fontSize: 14),
                                     ),
                                   ),

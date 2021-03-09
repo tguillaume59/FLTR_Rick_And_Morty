@@ -47,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return SingleChildScrollView(
                 child: Stack(
                   children: [
+                    //region background
                     Column(
                       children: [
                         Container(
@@ -56,27 +57,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Container(color: Colors.white)
                       ],
                     ),
+                    //endregion background
                     Column(
                       children: [
-                        buildContainer(marginTop: 100, child: Container()),
-                        buildContainer(
-                            marginTop: 20,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height,
-                              margin: EdgeInsets.all(8),
-                              child: buildChipList(listEpisodes: [
-                                "Épisode 1",
-                                "Épisode 1",
-                                "Épisode 30",
-                                "Épisode 1",
-                                "Épisode 100",
-                                "Épisode 1",
-                                "Épisode 286"
-                              ]),
-                            ))
+                        //region profile identity
+                        _buildContainerWrapContent(
+                            marginTop: 100,
+                            child: snapshot.hasData
+                                ? Column(children: [
+                                    _buildCharacterNameTextView(snapshot),
+                                    _buildSpeciesTextView(snapshot),
+                                    _buildTypeTextView(snapshot),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      margin: EdgeInsets.only(
+                                          left: 15,
+                                          right: 15,
+                                          top: 20,
+                                          bottom: 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildOriginTextView(snapshot),
+                                          _buildBlackLeftTextView(
+                                              text: "Last known location"),
+                                          _buildLastKnownLocationTextView(
+                                              snapshot)
+                                        ],
+                                      ),
+                                    )
+                                  ])
+                                : buildLoader()),
+                        //endregion profile identity
+
+                        //region episodes
+                        _buildContainerWrapContent(
+                          marginTop: 20,
+                          child: snapshot.hasData
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildBlackTitleTextView(
+                                        text: "Apparitions", marginLeft: 20),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      margin: EdgeInsets.only(
+                                          left: 20,
+                                          top: 8,
+                                          right: 20,
+                                          bottom: 8),
+                                      child: buildChipList(
+                                          lisNumEpisodes: widget
+                                              .profileScreenBloc
+                                              .getListEpisodes(
+                                                  snapshot.data.episode)),
+                                    ),
+                                  ],
+                                )
+                              : buildLoader(),
+                        ),
+                        //endregion episodes
+                        _buildContainerWrapContent(
+                          marginTop: 20,
+                          child: snapshot.hasData
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildBlackTitleTextView(
+                                        text: "Ranking", marginLeft: 20),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      margin: EdgeInsets.all(20),
+                                      child: _buildRankingValue(snapshot),
+                                    ),
+                                  ],
+                                )
+                              : buildLoader(),
+                        )
                       ],
                     ),
+                    //region character icon profile
                     snapshot.hasData
                         ? Container(
                             alignment: Alignment.topCenter,
@@ -89,6 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           )
                         : Container()
+                    //endregion character icon profile
                   ],
                 ),
               );
@@ -122,27 +184,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Wrap buildChipList({List<String> listEpisodes}) {
+  Wrap buildChipList({List<String> lisNumEpisodes}) {
     List<Widget> listChips = [];
 
-    listEpisodes.forEach((episode) {
-      listChips.add(_buildChip(episode, HexColor(CHIP_BG_COLOR)));
+    lisNumEpisodes.forEach((numEpisode) {
+      listChips
+          .add(_buildChip("Episode n°$numEpisode", HexColor(CHIP_BG_COLOR)));
     });
 
     return Wrap(spacing: 6.0, runSpacing: 6.0, children: listChips);
   }
 
-  Container buildContainer({Widget child, double marginTop}) {
+  Container _buildContainerWrapContent({Widget child, double marginTop}) {
     return Container(
-      height: 300,
-      width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 15, right: 15, top: marginTop, bottom: 10),
-      child: Material(
-          elevation: 5,
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          child: child),
+        width: (MediaQuery.of(context).size.width),
+        margin:
+            EdgeInsets.only(left: 15, right: 15, top: marginTop, bottom: 10),
+        child: _buildMaterial(child: child));
+  }
+
+  Container _buildContainer({Widget child, double height, double marginTop}) {
+    return Container(
+        height: height,
+        width: (MediaQuery.of(context).size.width),
+        margin:
+            EdgeInsets.only(left: 15, right: 15, top: marginTop, bottom: 10),
+        child: _buildMaterial(child: child));
+  }
+
+  Material _buildMaterial({Widget child}) {
+    return Material(
+        elevation: 5,
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        child: child);
+  }
+
+  Widget buildLoader() {
+    return Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.all(30),
+        child: CircularProgressIndicator());
+  }
+
+  Container _buildGreyCenterTextView({String text}) {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: Text(text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: HexColor(TEXT_COLOR_GREY),
+              fontSize: 14)),
     );
+  }
+
+  Container _buildBlackLeftTextView({String text}) {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: Text(text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: HexColor(TEXT_COLOR_BLACK),
+              fontSize: 14)),
+    );
+  }
+
+  Container _buildBlackTitleTextView(
+      {String text, double fontSize = 20, double marginTop = 10, double marginLeft = 0}) {
+    return Container(
+      margin: EdgeInsets.only(top: marginTop, left: marginLeft),
+      child: Text(text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: HexColor(TEXT_COLOR_BLACK),
+              fontSize: fontSize)),
+    );
+  }
+
+  Container _buildCharacterNameTextView(AsyncSnapshot<Character> snapshot) {
+    return _buildBlackTitleTextView(text: snapshot.data.name, marginTop: 80);
+  }
+
+  Container _buildSpeciesTextView(AsyncSnapshot<Character> snapshot) {
+    String text = "";
+    if (snapshot.data.species.isNotEmpty) {
+      text += snapshot.data.species;
+    }
+
+    if (snapshot.data.gender.isNotEmpty && text.isNotEmpty) {
+      text += " - ";
+    }
+
+    if (snapshot.data.gender.isNotEmpty) {
+      text += snapshot.data.gender;
+    }
+
+    return _buildGreyCenterTextView(text: text);
+  }
+
+  Container _buildTypeTextView(AsyncSnapshot<Character> snapshot) {
+    if (snapshot.data.type.isNotEmpty) {
+      return _buildGreyCenterTextView(text: snapshot.data.type);
+    } else {
+      return Container();
+    }
+  }
+
+  Container _buildOriginTextView(AsyncSnapshot<Character> snapshot) {
+    String text = "";
+    snapshot.data.origin.isNotEmpty()
+        ? text = snapshot.data.origin.name
+        : text = "N/A";
+
+    return _buildBlackLeftTextView(text: "Origin: $text");
+  }
+
+  Container _buildLastKnownLocationTextView(AsyncSnapshot<Character> snapshot) {
+    String lastKnowLocation = "";
+    snapshot.data.location.isNotEmpty()
+        ? lastKnowLocation = snapshot.data.location.name
+        : lastKnowLocation = "N/A";
+
+    return _buildBlackLeftTextView(text: lastKnowLocation);
+  }
+
+  Container _buildRankingValue(AsyncSnapshot<Character> snapshot){
+    String text = "N°${snapshot.data.id}/${widget.profileScreenBloc.getTotalCharacters()}";
+    return _buildBlackTitleTextView(
+        text: text,
+        fontSize: 50);
   }
 //endregion
 }

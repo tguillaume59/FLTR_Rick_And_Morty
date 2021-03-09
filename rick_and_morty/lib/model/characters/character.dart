@@ -24,20 +24,21 @@ class Character {
 
   Character(
       {this.id,
-        this.name,
-        this.status,
-        this.species,
-        this.type,
-        this.gender,
-        this.origin,
-        this.location,
-        this.image,
-        this.episode,
-        this.url,
-        this.created});
+      this.name,
+      this.status,
+      this.species,
+      this.type,
+      this.gender,
+      this.origin,
+      this.location,
+      this.image,
+      this.episode,
+      this.url,
+      this.created});
 
   factory Character.fromJson(Map<String, dynamic> json) =>
       _$CharacterFromJson(json);
+
   Map<String, dynamic> toJson() => _$CharacterToJson(this);
 }
 
@@ -48,7 +49,15 @@ class Origin {
 
   Origin({this.name, this.url});
 
-  factory Origin.fromJson(Map<String, dynamic> json) =>
-      _$OriginFromJson(json);
+  factory Origin.fromJson(Map<String, dynamic> json) => _$OriginFromJson(json);
+
   Map<String, dynamic> toJson() => _$OriginToJson(this);
+
+  bool isNotEmpty() {
+    return !isEmpty();
+  }
+
+  bool isEmpty() {
+    return name.isEmpty || url.isEmpty;
+  }
 }

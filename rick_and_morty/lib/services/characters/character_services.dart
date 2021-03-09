@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:rick_and_morty/model/characters/character.dart';
+import 'package:rick_and_morty/model/characters/characters_list_result.dart';
 
 class CharacterApiServices {
   final Dio _dio;
@@ -31,10 +32,16 @@ class CharacterApiServices {
     }
   }
 
-  Future<List<Character>> getCharactersList() async {
+  Future<List<Character>> getOnlyCharactersList() async {
     var data = await _getData("/character");
     List<dynamic> characterData = data['results'];
     List<Character> charactersList = characterData.map((f) => Character.fromJson(f)).toList();
+    return charactersList;
+  }
+
+  Future<CharactersListResult> getCharactersList() async {
+    var data = await _getData("/character");
+    CharactersListResult charactersList = CharactersListResult.fromJson(data);
     return charactersList;
   }
 
