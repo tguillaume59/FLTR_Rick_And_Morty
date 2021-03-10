@@ -1,6 +1,6 @@
-import 'package:rick_and_morty/model/characters/character.dart';
-import 'package:rick_and_morty/model/characters/characters_list_result.dart';
-import 'package:rick_and_morty/services/characters/character_services.dart';
+import 'package:rick_and_morty/services/characters/clients/character_services.dart';
+import 'package:rick_and_morty/services/characters/models/character.dart';
+import 'package:rick_and_morty/services/characters/models/characters_list_result.dart';
 
 class CharacterRepository {
   final CharacterApiServices client;
@@ -15,5 +15,5 @@ class CharacterRepository {
   }
 
   Future<Character> getCharacterById(int id) async =>
-      await client.getCharactersById(id);
+      await client.getCharacterById(id);
 }

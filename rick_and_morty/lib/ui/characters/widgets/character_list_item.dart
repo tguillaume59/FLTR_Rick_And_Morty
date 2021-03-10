@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:rick_and_morty/model/characters/character.dart';
+import 'package:rick_and_morty/services/characters/models/character.dart';
 import 'package:rick_and_morty/ui/profile/profile_screen.dart';
 import 'package:rick_and_morty/ui/profile/profile_screen_bloc.dart';
 import 'package:rick_and_morty/utils/color/colors.dart';

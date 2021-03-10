@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:rick_and_morty/model/characters/character.dart';
+import 'package:rick_and_morty/services/common/models/info/info.dart';
+
+import 'character.dart';
 
 part 'characters_list_result.g.dart';
 
@@ -15,20 +17,4 @@ class CharactersListResult{
       _$CharactersListResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$CharactersListResultToJson(this);
-}
-
-@JsonSerializable()
-class Info {
-
-  int count;
-  int pages;
-  String next;
-  String prev;
-
-  Info({this.count, this.pages, this.next, this.prev});
-
-  factory Info.fromJson(Map<String, dynamic> json) =>
-      _$InfoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$InfoToJson(this);
 }
