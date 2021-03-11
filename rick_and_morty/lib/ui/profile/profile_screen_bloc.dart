@@ -1,6 +1,6 @@
 import 'package:rick_and_morty/services/characters/models/character.dart';
 import 'package:rick_and_morty/services/characters/repositories/character_repository.dart';
-import 'package:rick_and_morty/ui/common/base_bloc.dart';
+import 'package:rick_and_morty/ui/common/base_classes/base_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProfileScreenBloc implements BaseBloc {

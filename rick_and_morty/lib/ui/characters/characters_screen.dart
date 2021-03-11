@@ -17,6 +17,9 @@ class _CharactersScreenState extends State<CharactersScreen> {
   @override
   void initState() {
     super.initState();
+    /**
+     * Astuce pour faire de l'async dans le initState
+     */
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _loadData();
     });
@@ -25,6 +28,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
   @override
   void dispose() {
     super.dispose();
+    //widget.bloc.dispose();
   }
 
   @override
@@ -48,9 +52,6 @@ class _CharactersScreenState extends State<CharactersScreen> {
 
   //region functions
   _loadData() async {
-    /**
-     * Astuce pour faire de l'async dans le initState
-     */
     await widget.bloc.fetchCharacters();
   }
 //endregion

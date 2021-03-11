@@ -11,7 +11,7 @@ class CharactersListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: GridView.builder(
-          itemCount: 50,
+          itemCount: listCharacters.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 10,

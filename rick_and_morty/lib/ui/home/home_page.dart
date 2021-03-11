@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:rick_and_morty/ui/characters/characters_screen.dart';
 import 'package:rick_and_morty/ui/characters/characters_screen_bloc.dart';
 import 'package:rick_and_morty/ui/locations/location_screen.dart';
+import 'package:rick_and_morty/ui/locations/location_screen_bloc.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     CharactersScreen(bloc:  GetIt.I.get<CharactersScreenBloc>()),
-    LocationScreen()
+    LocationScreen(bloc : GetIt.I.get<LocationScreenBloc>())
   ];
 
   @override
