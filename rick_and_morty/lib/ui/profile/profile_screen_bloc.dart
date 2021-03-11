@@ -52,7 +52,47 @@ class ProfileScreenBloc implements BaseBloc {
     return listNumEpisodes;
   }
 
-  int getTotalCharacters(){
+  int _getTotalCharacters(){
     return _repository.totalCharacters;
+  }
+
+
+  String getSpeciesText({Character character}) {
+    String text = "";
+    if (character.species.isNotEmpty) {
+      text += character.species;
+    }
+
+    if (character.gender.isNotEmpty && text.isNotEmpty) {
+      text += " - ";
+    }
+
+    if (character.gender.isNotEmpty) {
+      text += character.gender;
+    }
+
+    return text;
+  }
+
+  String getOriginText({Character character}) {
+    String text = "";
+    character.origin.isNotEmpty()
+        ? text = character.origin.name
+        : text = "N/A";
+
+    return text;
+  }
+
+  String getLastKnownLocationText({Character character}) {
+    String lastKnowLocation = "";
+    character.location.isNotEmpty()
+        ? lastKnowLocation = character.location.name
+        : lastKnowLocation = "N/A";
+
+    return lastKnowLocation;
+  }
+
+  String getRankingValue({Character character}) {
+    return "N°${character.id}/${_getTotalCharacters()}";
   }
 }

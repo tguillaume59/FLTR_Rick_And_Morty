@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/services/characters/models/character.dart';
+import 'package:rick_and_morty/ui/common/providers/chip_provider.dart';
+import 'package:rick_and_morty/ui/common/providers/material_container_provider.dart';
+import 'package:rick_and_morty/ui/common/providers/progress_indicator_provider.dart';
+import 'package:rick_and_morty/ui/common/providers/text_view_provider.dart';
 import 'package:rick_and_morty/ui/profile/profile_screen_bloc.dart';
 import 'package:rick_and_morty/utils/color/colors.dart';
 import 'package:rick_and_morty/utils/color/hex_color.dart';
@@ -61,13 +65,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Column(
                       children: [
                         //region profile identity
-                        _buildContainerWrapContent(
+                        MaterialContainerWrapContent(
                             marginTop: 100,
                             child: snapshot.hasData
                                 ? Column(children: [
-                                    _buildCharacterNameTextView(snapshot),
-                                    _buildSpeciesTextView(snapshot),
-                                    _buildTypeTextView(snapshot),
+                                    BlackTitleTextView(
+                                        text: snapshot.data.name,
+                                        marginTop: 80.0),
+                                    GreyBodyTextView(
+                                        text: widget.profileScreenBloc
+                                            .getSpeciesText(
+                                                character: snapshot.data)),
+                                    snapshot.data.type.isNotEmpty
+                                        ? GreyBodyTextView(
+                                            text: snapshot.data.type)
+                                        : Container(),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       margin: EdgeInsets.only(
@@ -79,27 +91,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          _buildOriginTextView(snapshot),
-                                          _buildBlackLeftTextView(
+                                          BlackBodyTextView(
+                                              text: widget.profileScreenBloc
+                                                  .getOriginText(
+                                                      character:
+                                                          snapshot.data)),
+                                          BlackBodyTextView(
                                               text: "Last known location"),
-                                          _buildLastKnownLocationTextView(
-                                              snapshot)
+                                          BlackBodyTextView(
+                                              text: widget.profileScreenBloc
+                                                  .getLastKnownLocationText(
+                                                      character: snapshot.data))
                                         ],
                                       ),
                                     )
                                   ])
-                                : buildLoader()),
+                                : CircularLoader()),
                         //endregion profile identity
 
                         //region episodes
-                        _buildContainerWrapContent(
+                        MaterialContainerWrapContent(
                           marginTop: 20,
                           child: snapshot.hasData
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildBlackTitleTextView(
-                                        text: "Apparitions", marginLeft: 20),
+                                    BlackTitleTextView(
+                                        text: "Apparitions", marginLeft: 20.0),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       margin: EdgeInsets.only(
@@ -115,25 +133,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ],
                                 )
-                              : buildLoader(),
+                              : CircularLoader(),
                         ),
                         //endregion episodes
-                        _buildContainerWrapContent(
+                        MaterialContainerWrapContent(
                           marginTop: 20,
                           child: snapshot.hasData
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildBlackTitleTextView(
-                                        text: "Ranking", marginLeft: 20),
+                                    BlackTitleTextView(
+                                        text: "Ranking", marginLeft: 20.0),
                                     Container(
                                       alignment: Alignment.center,
                                       margin: EdgeInsets.all(20),
-                                      child: _buildRankingValue(snapshot),
+                                      child: BlackTitleTextView(
+                                          text: widget.profileScreenBloc
+                                              .getRankingValue(
+                                                  character: snapshot.data),
+                                          fontSize: 50.0),
                                     ),
                                   ],
                                 )
-                              : buildLoader(),
+                              : CircularLoader(),
                         )
                       ],
                     ),
@@ -168,157 +190,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 //endregion
 
 //region build UI
-  Widget _buildChip(String label, Color color) {
-    return Chip(
-      labelPadding: EdgeInsets.all(2.0),
-      label: Text(
-        label,
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: color,
-      elevation: 6.0,
-      shadowColor: Colors.grey[60],
-      padding: EdgeInsets.all(8.0),
-    );
-  }
-
   Wrap buildChipList({List<String> lisNumEpisodes}) {
     List<Widget> listChips = [];
 
     lisNumEpisodes.forEach((numEpisode) {
-      listChips
-          .add(_buildChip("Episode n°$numEpisode", HexColor(CHIP_BG_COLOR)));
+      listChips.add(GreyChip(label: "Episode n°$numEpisode"));
     });
-
     return Wrap(spacing: 6.0, runSpacing: 6.0, children: listChips);
-  }
-
-  Container _buildContainerWrapContent({Widget child, double marginTop}) {
-    return Container(
-        width: (MediaQuery.of(context).size.width),
-        margin:
-            EdgeInsets.only(left: 15, right: 15, top: marginTop, bottom: 10),
-        child: _buildMaterial(child: child));
-  }
-
-  Container _buildContainer({Widget child, double height, double marginTop}) {
-    return Container(
-        height: height,
-        width: (MediaQuery.of(context).size.width),
-        margin:
-            EdgeInsets.only(left: 15, right: 15, top: marginTop, bottom: 10),
-        child: _buildMaterial(child: child));
-  }
-
-  Material _buildMaterial({Widget child}) {
-    return Material(
-        elevation: 5,
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        child: child);
-  }
-
-  Widget buildLoader() {
-    return Container(
-        alignment: Alignment.center,
-        margin: EdgeInsets.all(30),
-        child: CircularProgressIndicator());
-  }
-
-  Container _buildGreyCenterTextView({String text}) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      child: Text(text,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: HexColor(TEXT_COLOR_GREY),
-              fontSize: 14)),
-    );
-  }
-
-  Container _buildBlackLeftTextView({String text}) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      child: Text(text,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: HexColor(TEXT_COLOR_BLACK),
-              fontSize: 14)),
-    );
-  }
-
-  Container _buildBlackTitleTextView(
-      {String text, double fontSize = 20, double marginTop = 10, double marginLeft = 0}) {
-    return Container(
-      margin: EdgeInsets.only(top: marginTop, left: marginLeft),
-      child: Text(text,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: HexColor(TEXT_COLOR_BLACK),
-              fontSize: fontSize)),
-    );
-  }
-
-  Container _buildCharacterNameTextView(AsyncSnapshot<Character> snapshot) {
-    return _buildBlackTitleTextView(text: snapshot.data.name, marginTop: 80);
-  }
-
-  Container _buildSpeciesTextView(AsyncSnapshot<Character> snapshot) {
-    String text = "";
-    if (snapshot.data.species.isNotEmpty) {
-      text += snapshot.data.species;
-    }
-
-    if (snapshot.data.gender.isNotEmpty && text.isNotEmpty) {
-      text += " - ";
-    }
-
-    if (snapshot.data.gender.isNotEmpty) {
-      text += snapshot.data.gender;
-    }
-
-    return _buildGreyCenterTextView(text: text);
-  }
-
-  Container _buildTypeTextView(AsyncSnapshot<Character> snapshot) {
-    if (snapshot.data.type.isNotEmpty) {
-      return _buildGreyCenterTextView(text: snapshot.data.type);
-    } else {
-      return Container();
-    }
-  }
-
-  Container _buildOriginTextView(AsyncSnapshot<Character> snapshot) {
-    String text = "";
-    snapshot.data.origin.isNotEmpty()
-        ? text = snapshot.data.origin.name
-        : text = "N/A";
-
-    return _buildBlackLeftTextView(text: "Origin: $text");
-  }
-
-  Container _buildLastKnownLocationTextView(AsyncSnapshot<Character> snapshot) {
-    String lastKnowLocation = "";
-    snapshot.data.location.isNotEmpty()
-        ? lastKnowLocation = snapshot.data.location.name
-        : lastKnowLocation = "N/A";
-
-    return _buildBlackLeftTextView(text: lastKnowLocation);
-  }
-
-  Container _buildRankingValue(AsyncSnapshot<Character> snapshot){
-    String text = "N°${snapshot.data.id}/${widget.profileScreenBloc.getTotalCharacters()}";
-    return _buildBlackTitleTextView(
-        text: text,
-        fontSize: 50);
   }
 //endregion
 }

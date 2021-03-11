@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/ui/common/providers/progress_indicator_provider.dart';
 import 'package:rick_and_morty/ui/locations/location_screen_bloc.dart';
 import 'package:rick_and_morty/ui/locations/widgets/locations_list_widget.dart';
 
@@ -45,7 +46,7 @@ class _LocationScreenState extends State<LocationScreen> {
             if (snapshot.hasError) {
               return Text("Erreur");
             }
-            return Center(child: CircularProgressIndicator());
+            return CircularLoader();
           }),
     );
   }
