@@ -106,3 +106,13 @@ class GreyBodyTextView extends BaseBodyTextView {
             textColor: HexColor(TEXT_COLOR_GREY));
 }
 //endregion Body Text View
+
+//region Body Text View
+class NavBarItemTextView extends BaseTextView{
+  NavBarItemTextView({key, text})
+      : super(
+      key: key,
+      text: text,
+      textColor: Colors.white,);
+}
+//
