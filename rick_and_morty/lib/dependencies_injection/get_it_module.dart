@@ -23,7 +23,4 @@ setupDependenciesInjection() {
   GetIt.I.registerSingleton<CharactersScreenBloc>(CharactersScreenBloc(GetIt.I.get<CharacterRepository>()));
   GetIt.I.registerSingleton<ProfileScreenBloc>(ProfileScreenBloc(GetIt.I.get<CharacterRepository>()));
   GetIt.I.registerSingleton<LocationScreenBloc>(LocationScreenBloc(GetIt.I.get<LocationRepository>()));
-
-  // UI Providers
-  GetIt.I.registerSingleton<TextViewProvider>(TextViewProvider());
 }
